@@ -18,6 +18,8 @@ import org.apache.beam.sdk.coders.StringUtf8Coder;
 import org.apache.beam.sdk.io.gcp.bigquery.BigQueryIO.Write.CreateDisposition;
 import org.apache.beam.sdk.io.gcp.bigquery.BigQueryIO.Write.WriteDisposition;
 import com.google.api.services.bigquery.model.TableRow;
+// import com.google.cloud.aiplatform.v1.MatchServiceClient;
+// import com.google.cloud.aiplatform.v1.FindNeighborsRequest;
 
 
 public class ExternalApi {
@@ -30,7 +32,7 @@ public class ExternalApi {
                                 "Read from BigQuery query",
                                 BigQueryIO.readTableRows()
                                     .fromQuery(String.format(
-                                            "SELECT vector FROM `foo.vectorbar`"))
+                                            "SELECT vector FROM `vme.vector_bar`"))
                                     .usingStandardSql())
                     .apply(
                             "TableRows to MyData",
@@ -47,12 +49,23 @@ public class ExternalApi {
         }
 
         private static void callMatchingEngine(VectorData vectorData){
-            //DO MATCHING ENGINEY STUFF HERE
-            //TODO set a fixed length to the ArrayList if vectors are fixed or typically above a size
-            //Just setting to same vector now, it should be replaced with the matchedVector from the call
-            LOG.info("Starting Vector: " + vectorData.startingVector.toString());
-            vectorData.matchedVector = new ArrayList<Double>(vectorData.startingVector);
-            LOG.info("Matched Vector: " + vectorData.matchedVector.toString());
+            // //DO MATCHING ENGINEY STUFF HERE
+            // try (MatchServiceClient matchServiceClient = MatchServiceClient.create()) {
+            //     FindNeighborsRequest request =
+            //         FindNeighborsRequest.newBuilder()
+            //             .setIndexEndpoint(
+            //                 IndexEndpointName.of("[PROJECT]", "[LOCATION]", "[INDEX_ENDPOINT]").toString())
+            //             .setDeployedIndexId("deployedIndexId-1101212953")
+            //             .addAllQueries(new ArrayList<FindNeighborsRequest.Query>())
+            //             .setReturnFullDatapoint(true)
+            //             .build();
+            //     FindNeighborsResponse response = matchServiceClient.findNeighbors(request);
+            // }
+            // //TODO set a fixed length to the ArrayList if vectors are fixed or typically above a size
+            // //Just setting to same vector now, it should be replaced with the matchedVector from the call
+            // LOG.info("Starting Vector: " + vectorData.startingVector.toString());
+            // vectorData.matchedVector = new ArrayList<Double>(vectorData.startingVector);
+            // LOG.info("Matched Vector: " + vectorData.matchedVector.toString());
         }
     }
 
@@ -63,7 +76,7 @@ public class ExternalApi {
         PCollection<TableRow> entries = rows.apply(ParDo.of(new MatchingEngineCall()));
         LOG.info("************Inserting Results************");
         entries.apply("Write to BigQuery", BigQueryIO.writeTableRows()
-            .to(String.format("%s:%s.%s", "red-road-356318", "foo", "matchedbar"))
+            .to(String.format("%s:%s.%s", "red-road-356318", "vme", "matched_bar"))
             //.withSchema(schema)
             .withCreateDisposition(CreateDisposition.CREATE_NEVER)
             .withWriteDisposition(WriteDisposition.WRITE_TRUNCATE));
