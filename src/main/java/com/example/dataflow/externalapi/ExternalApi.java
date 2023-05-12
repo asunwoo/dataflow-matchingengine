@@ -1,6 +1,5 @@
-package org.example.dataflow.externalapi;
+package com.example.dataflow.externalapi;
 
-import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,16 +9,14 @@ import org.apache.beam.sdk.values.PCollection;
 import org.apache.beam.sdk.values.TypeDescriptor;
 import org.apache.beam.sdk.transforms.DoFn;
 import org.apache.beam.sdk.transforms.MapElements;
-import org.apache.beam.sdk.transforms.PTransform;
 import org.apache.beam.sdk.transforms.ParDo;
 import org.apache.beam.sdk.options.PipelineOptions;
 import org.apache.beam.sdk.options.PipelineOptionsFactory;
-import org.apache.beam.sdk.coders.StringUtf8Coder;
 import org.apache.beam.sdk.io.gcp.bigquery.BigQueryIO.Write.CreateDisposition;
 import org.apache.beam.sdk.io.gcp.bigquery.BigQueryIO.Write.WriteDisposition;
 import com.google.api.services.bigquery.model.TableRow;
-// import com.google.cloud.aiplatform.v1.MatchServiceClient;
-// import com.google.cloud.aiplatform.v1.FindNeighborsRequest;
+import com.google.cloud.aiplatform.v1beta1.MatchServiceClient;
+import com.google.cloud.aiplatform.v1beta1.FindNeighborsRequest;
 
 
 public class ExternalApi {
@@ -76,7 +73,7 @@ public class ExternalApi {
         PCollection<TableRow> entries = rows.apply(ParDo.of(new MatchingEngineCall()));
         LOG.info("************Inserting Results************");
         entries.apply("Write to BigQuery", BigQueryIO.writeTableRows()
-            .to(String.format("%s:%s.%s", "red-road-356318", "vme", "matched_bar"))
+            .to(String.format("%s:%s.%s", "vertex-samples-for-ck", "vme", "matched_bar"))
             //.withSchema(schema)
             .withCreateDisposition(CreateDisposition.CREATE_NEVER)
             .withWriteDisposition(WriteDisposition.WRITE_TRUNCATE));

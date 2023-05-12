@@ -1,4 +1,4 @@
-package org.example.dataflow.externalapi;
+package com.example.dataflow.externalapi;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,11 +6,8 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 import com.google.api.services.bigquery.model.TableRow;
-import com.google.api.services.bigquery.model.TableCell;
 import org.apache.beam.sdk.coders.DefaultCoder;
 import org.apache.beam.sdk.extensions.avro.coders.AvroCoder;
-import org.apache.beam.sdk.coders.StringUtf8Coder;
-import org.apache.beam.sdk.coders.StringDelegateCoder;
 
 @DefaultCoder(AvroCoder.class)
 class VectorData {
