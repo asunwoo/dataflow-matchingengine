@@ -16,7 +16,8 @@ public class METest {
   public static void main(String[] args) {
 
     try {
-      Credentials credentials = GoogleCredentials.fromStream(new FileInputStream("/home/asunwoo_mikewood_altostrat_com/vertex-samples-for-ck-0b622d103d10.json"));
+      Credentials credentials =
+          GoogleCredentials.fromStream(new FileInputStream("/Users/asunwoo/workspaces/java/dataflow-matchingengine/vertex-samples-for-ck-0b622d103d10.json"));
 
       MatchServiceSettings matchServiceSettings =
           MatchServiceSettings.newBuilder().setCredentialsProvider(FixedCredentialsProvider.create(credentials)).build();
@@ -27,7 +28,7 @@ public class METest {
           FindNeighborsRequest.newBuilder()
               .setIndexEndpoint(
                   IndexEndpointName.of("vertex-samples-for-ck", "us-west1", "2017559856503848960").toString())
-              .setDeployedIndexId("sampleDeployedIndex")
+              .setDeployedIndexId("test_05082023_index_deployed")
               .addAllQueries(new ArrayList<FindNeighborsRequest.Query>())
               .setReturnFullDatapoint(true)
               .build();
